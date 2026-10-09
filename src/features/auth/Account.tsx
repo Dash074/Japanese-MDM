@@ -2,7 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { getSyncStatus, onSyncStatus, pendingAttempts, syncNow, type SyncStatus } from "../../lib/sync";
 import { useProgress } from "../../lib/progress";
-import { backendEnabled, supabase } from "../../lib/supabase";
+import { backendEnabled, googleEnabled, supabase } from "../../lib/supabase";
 import { Button, Card } from "../../ui/primitives";
 
 /** アカウント — sign-in (magic link / Google) and sync status (FR-01, NFR-04). */
@@ -40,12 +40,12 @@ export function Account() {
     e.preventDefault();
     setError(null);
     const { error } = await supabase!.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + "/settings" } });
-    if (error) setError(error.message);
+    if (error) setError(friendlyAuthError(error.message));
     else setSent(true);
   };
   const google = async () => {
     const { error } = await supabase!.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/settings" } });
-    if (error) setError(error.message);
+    if (error) setError(friendlyAuthError(error.message));
   };
 
   return (
@@ -84,10 +84,19 @@ export function Account() {
             />
             <Button variant="primary" type="submit">Email me a link</Button>
           </form>
-          <Button onClick={google}>Continue with Google</Button>
+          {googleEnabled && <Button onClick={google}>Continue with Google</Button>}
         </>
       )}
       {error && <p className="text-sm text-shu">{error}</p>}
     </Card>
   );
+}
+
+/** Turn Supabase auth errors into actionable messages. */
+export function friendlyAuthError(msg: string): string {
+  if (/rate limit|too many|over_email_send_rate_limit|security purposes/i.test(msg))
+    return "Too many sign-in emails were sent recently. Please wait a few minutes and try again. Your practice is saved on this device meanwhile.";
+  if (/provider is not enabled|Unsupported provider/i.test(msg)) return "This sign-in method isn't enabled. Please use the email link instead.";
+  if (/invalid.*email/i.test(msg)) return "That email address doesn't look right.";
+  return msg;
 }
