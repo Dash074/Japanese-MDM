@@ -17,7 +17,8 @@
     "e2e": "playwright test",
     "test:sync": "tsx scripts/sync-smoke.ts",
     "db:query": "tsx scripts/db-query.ts",
-    "study:report": "tsx scripts/study-report.ts"
+    "study:report": "tsx scripts/study-report.ts",
+    "robustness": "tsx scripts/robustness.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
