@@ -113,8 +113,10 @@ export function proportionErrors(m: MatchResult): StrokeError[] {
   const out: StrokeError[] = [];
   m.mapping.forEach((j, i) => {
     if (j < 0) return;
-    // Smoothed length so hand jitter doesn't inflate short strokes; absolute floor for dots.
-    const uLen = pathLength(smooth(m.user[i])), rLen = pathLength(smooth(m.ref[j]));
+    // Length of a smoothed, coarsely resampled path: hand jitter cancels out, overall shape (curves) is kept.
+    // An absolute floor protects dots and short strokes.
+    const shapeLen = (p: Path) => pathLength(resample(smooth(p), 9));
+    const uLen = shapeLen(m.user[i]), rLen = shapeLen(m.ref[j]);
     const ratio = uLen / (rLen || 1);
     if (Math.abs(uLen - rLen) <= Math.max(CONFIG.proportionTolerance * rLen, CONFIG.proportionMinDelta)) return;
     out.push({
