@@ -51,7 +51,8 @@ src/core/        Pure TypeScript analysis engine: no React, fully unit-tested
   live.ts        live per-stroke check
   scheduler/     FSRS (ts-fsrs) + automatic grading
   recommender/   rule-based recommendations → drill sequences
-src/features/    Screens: home 今日, review 復習, library 漢字帳, practice 練習, drill 特訓, progress 成績, settings 設定
+  quiz/          confusion-aware quiz generation
+src/features/    Screens: home 今日, review 復習, library 漢字帳, practice 練習, drill 特訓, quiz 小テスト, progress 成績, settings 設定
 src/ui/          Themed components: InkCanvas, KanjiGlyph, Hanko…
 src/theme/       Colour tokens (washi / sumi / shu / ai), light + dark
 scripts/         Data pipeline + evaluation
@@ -69,7 +70,7 @@ docs/            ADRs, evaluation results
 | 4 Practice MVP | ✅ guide levels, live check, result highlighting, replay, local progress |
 | 5 Backend (Supabase) | ✅ code: schema + RLS, magic link/Google auth, offline-first sync · ⚠️ needs a Supabase project to switch on |
 | 6 FSRS + recommendations + drills | ✅ auto-graded FSRS reviews, new-kanji intro, rule-based recommendations, confusion/order/proportion drills |
-| 7 Dashboard + polish | ✅ progress dashboard, settings, pen test, JSON/CSV export · ⏳ a11y audit, LLM extras |
+| 7 Dashboard + polish | ✅ progress dashboard, settings, pen test, export, WCAG AA audit, confusion-aware quizzes · ⏳ LLM extras |
 | 8 Testing + release | 🔄 Playwright E2E (11 journeys) in CI · ⏳ device matrix, UAT, deploy |
 
 ## Licences
