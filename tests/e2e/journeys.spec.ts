@@ -68,6 +68,7 @@ test("settings: export attempts as JSON", async ({ page }) => {
 });
 
 test("guide-level promotion keeps the result on screen", async ({ page }) => {
+  test.slow(); // writes two kanji
   // Two clean attempts at Trace promote 山 to Hint; the second result must stay visible.
   for (let k = 0; k < 2; k++) {
     await page.goto("/practice/山");
