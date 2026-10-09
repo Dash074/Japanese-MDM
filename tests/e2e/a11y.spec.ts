@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { draw, fresh, strokesOf } from "./helpers";
 
 /** WCAG 2.1 AA audit of every screen, both themes (NFR-06). */
-const SCREENS = ["/", "/review", "/library", "/kanji/右", "/practice/右", "/progress", "/settings"];
+const SCREENS = ["/", "/review", "/library", "/kanji/右", "/practice/右", "/quiz?seed=1", "/progress", "/settings"];
 
 test.beforeEach(async ({ page }) => fresh(page));
 

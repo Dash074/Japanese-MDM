@@ -6,6 +6,7 @@ import { Library } from "./features/library/Library";
 import { Drill } from "./features/drill/Drill";
 import { Practice } from "./features/practice/Practice";
 import { ProgressPage } from "./features/progress/ProgressPage";
+import { Quiz } from "./features/quiz/Quiz";
 import { Review } from "./features/review/Review";
 import { Settings } from "./features/settings/Settings";
 import { useKanjiData } from "./lib/data";
@@ -98,6 +99,7 @@ export function App() {
             <Route path="/review" element={<Review data={data} />} />
             <Route path="/drill" element={<Drill data={data} />} />
             <Route path="/progress" element={<ProgressPage data={data} />} />
+            <Route path="/quiz" element={<Quiz data={data} />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<p className="py-20 text-center font-mincho text-xl">迷子 — page not found</p>} />
           </Routes>

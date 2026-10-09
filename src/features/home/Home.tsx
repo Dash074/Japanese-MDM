@@ -51,6 +51,7 @@ export function Home({ data }: { data: KanjiData }) {
             {queue.due.length + queue.fresh.length > 0 && (
               <Link to={`/practice/${next}`} className="text-sm text-ai hover:underline">or free practice →</Link>
             )}
+            <Link to="/quiz" className="text-sm text-ai hover:underline">小テスト quiz →</Link>
           </div>
           {queue.due.length > 20 && (
             <p className="mt-3 text-sm text-shu">{queue.due.length} reviews due. New kanji are paused until you catch up.</p>
