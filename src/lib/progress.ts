@@ -62,6 +62,8 @@ type State = {
   /** (record returns the new attempt id, used to key its raw strokes.) */
   grade: (char: string, g: Grade, now?: number) => StoredCard;
   setSettings: (s: Partial<Settings>) => void;
+  /** A quiz answer that picked a look-alike counts toward the personal confusion graph. */
+  recordQuizConfusion: (target: string, chosen: string) => void;
   reset: () => void;
   markSynced: (ids: string[]) => void;
   clearDirty: (chars: string[]) => void;
@@ -201,6 +203,10 @@ export const useProgress = create<State>()(
 
         const log = [...s.log, ...added].sort((a, b) => a.at - b.at).slice(-LOG_LIMIT);
         set({ cards: merged, log, kanji, confusions });
+      },
+      recordQuizConfusion: (target, chosen) => {
+        const key = `${target}→${chosen}`;
+        set({ confusions: { ...get().confusions, [key]: (get().confusions[key] ?? 0) + 1 } });
       },
       setSettings: (p) => set({ settings: { ...get().settings, ...p } }),
       reset: () => set(INITIAL),

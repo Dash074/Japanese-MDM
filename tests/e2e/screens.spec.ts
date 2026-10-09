@@ -5,7 +5,7 @@ import { fresh, writeKanji, strokesOf, draw } from "./helpers";
  * Visual smoke test: every screen renders, no horizontal scroll, no console errors.
  * Screenshots go to screenshots/ for manual design review.
  */
-const SCREENS = ["/", "/review", "/library", "/kanji/右", "/practice/右", "/progress", "/settings"];
+const SCREENS = ["/", "/review", "/library", "/kanji/右", "/practice/右", "/quiz?seed=1", "/progress", "/settings"];
 
 test.beforeEach(async ({ page }) => fresh(page));
 
@@ -23,7 +23,7 @@ for (const theme of ["light", "dark"] as const)
       expect(text, `bad text on ${path}`).not.toMatch(/\[object Object\]|\bundefined\b|\bNaN\b/);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, `horizontal scroll on ${path}`).toBeLessThanOrEqual(1);
-      await page.screenshot({ path: `screenshots/${info.project.name}-${theme}${path.replace(/\//g, "_") || "_"}.png`, fullPage: true });
+      await page.screenshot({ path: `screenshots/${info.project.name}-${theme}${path.replace(/[/?=]/g, "_") || "_"}.png`, fullPage: true });
     }
     expect(errors).toEqual([]);
   });

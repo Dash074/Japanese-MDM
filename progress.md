@@ -16,12 +16,12 @@ _Last updated: 2026-10-10_
 | 4 | Practice MVP | ✅ |
 | 5 | Backend: Supabase auth + sync | ✅ live: 6 migrations, RLS 13/13, sync smoke test 9/9 |
 | 6 | FSRS + recommendations + drills | ✅ |
-| 7 | Dashboard + polish | ✅ WCAG 2.1 AA audit passing (LLM extras ⏳) |
+| 7 | Dashboard + polish + quizzes | ✅ WCAG 2.1 AA audit passing; confusion-aware quizzes (LLM extras ⏳) |
 | 8 | Testing, UAT, release | 🔄 E2E + a11y + study mode done; device matrix, UAT, deploy ⏳ |
 
 ## Key numbers
 - **Scope:** 103 N5 kanji (KANJIDIC2 old-JLPT level 4) + 26 non-N5 look-alike distractors
-- **Tests:** 164 unit/integration (Vitest) + 19 E2E (Playwright: journeys, screens, axe accessibility, study mode, offline) + 1 opt-in live two-device E2E (`LIVE=1`) + 9 live sync checks (`npm run test:sync`) + 13 live RLS checks (`supabase/tests/rls.sql`)
+- **Tests:** 173 unit/integration (Vitest) + 21 E2E (Playwright: journeys, screens, axe accessibility, study mode, offline) + 1 opt-in live two-device E2E (`LIVE=1`) + 9 live sync checks (`npm run test:sync`) + 13 live RLS checks (`supabase/tests/rls.sql`)
 - **Error detection (held-out synthetic, 7,680 attempts):** F1 order 0.99 · direction 0.99 · count 0.98 · proportion 0.98 · position 0.97 · look-alike 0.93 · 0% false positives on clean attempts
 - **Analysis speed:** p95 ≈ 4.6 ms per attempt
 - **Bundle:** ~82 KB gzipped JS
@@ -40,8 +40,8 @@ _Last updated: 2026-10-10_
 - ✅ GitHub Actions CI: lint → typecheck → unit tests → build, then E2E with screenshot artifacts
 - ✅ PR template, user-story and bug issue templates
 - ✅ ADR-001 (deterministic matching), ADR-002 (client-side analysis), ADR-003 (N5 scope)
-- ✅ `git init` (branch `main`)
-- ⏳ First commit / GitHub remote
+- ✅ Git history: root commit on `main`; 12 conventional commits on `develop` (data, core, tests, UI, app, sync, PWA, E2E, docs); feature branches merged with `--no-ff`. History scanned: no secrets. A fresh clone installs, tests and builds
+- ⏳ GitHub remote (push), then PR `develop` → `main`
 - ⏳ Vercel project
 
 ## Sprint 1 — Data + canvas ✅
@@ -107,7 +107,8 @@ _Last updated: 2026-10-10_
 - ✅ No horizontal scroll and no console errors on any screen (checked automatically, mobile + desktop, light + dark)
 - ✅ Accessibility: axe-core WCAG 2.1 A/AA audit of every screen + result panel, light and dark (`tests/e2e/a11y.spec.ts`), zero violations. Fixed: light-mode vermilion / matcha / gold contrast; dark-mode text on vermilion (new `--on-shu` token)
 - ✅ Recall prompt shows a word in context with the kanji masked (□手 みぎて “right hand”)
-- ⏳ Optional LLM mnemonics + example sentences
+- ✅ **Quizzes (Objective 7):** `src/core/quiz` generates 10-question quizzes weighted toward the learner's weak kanji and mix-ups (30-day log). Three kinds: meaning → kanji, fill-in-the-word (□手 みぎて), kanji → reading. Distractors are the kanji's real look-alikes (e.g. 大 vs 天 犬 太); readings are matched by length so the answer can't be guessed. A wrong look-alike pick is added to the confusion graph. Keyboard 1–4 / Enter; `?seed=N` for reproducible quizzes. 9 unit + 2 E2E tests; in the screen and accessibility sweeps
+- ⏳ Optional LLM mnemonics / LLM-written quiz items (needs an API key)
 
 ## Sprint 8 — Testing + release 🔄
 - ✅ Playwright E2E (`npm run e2e`): practise → hanko; swapped strokes → order error; 右/左 confusion → drill recommended; review intro → auto-grade → next; export JSON; all screens render
@@ -130,3 +131,4 @@ _Last updated: 2026-10-10_
 - **2026-10-10:** Accessibility audit (axe, WCAG 2.1 AA) passing after contrast fixes. Raw strokes stored, exported and synced; fixture import + real-data evaluation pipeline. Example words for all 103 kanji; recall prompt in context. Study mode (control/full) for §7.5. Fixed `[object Object]` grade bug. Migrations 5 and 6 applied.
 - **2026-10-10:** Ending-detection tests (8). Offline/installable PWA with E2E on the production build. Study report script verified against seeded data. 161 unit + 18 E2E passing.
 - **2026-10-10:** Sync bug hunt: fixed second-device progress rebuild and guide-level upload. Live two-device browser test added and passing; it uncovered and led to fixing the vanishing-result-on-promotion bug. Wrote the user manual and technical evaluation report. 164 unit + 19 E2E passing.
+- **2026-10-10:** First git history (13 commits, verified fresh-clone build, no secrets). Objective 7: confusion-aware quizzes on `feat/quiz`, merged into `develop`. 173 unit + 21 E2E passing.
