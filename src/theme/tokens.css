@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 和紙と墨 — paper and ink (implementation.md §5.2) */
+:root {
+  --bg: #f7f1e3;       /* 和紙 washi */
+  --surface: #fbf7ee;  /* 生成 kinari */
+  --ink: #1e1b18;      /* 墨 sumi */
+  --ink-muted: #6b645a;/* 鼠 nezumi */
+  --shu: #b5391f;      /* 朱 vermilion */
+  --on-shu: #fbf7ee;   /* text on vermilion */
+  --ai: #1f4e79;       /* 藍 indigo */
+  --matcha: #536c31;   /* 抹茶 */
+  --kincha: #96702c;   /* 金茶 */
+  --grid: #e3d9c4;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16130f; --surface: #211d17; --ink: #ede6d6; --ink-muted: #a39a8a;
+    --shu: #e0634b; --on-shu: #1a1410; --ai: #7fa7d1; --matcha: #a3bf73; --kincha: #d9ae5f; --grid: #3a332a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16130f; --surface: #211d17; --ink: #ede6d6; --ink-muted: #a39a8a;
+  --shu: #e0634b; --on-shu: #1a1410; --ai: #7fa7d1; --matcha: #a3bf73; --kincha: #d9ae5f; --grid: #3a332a;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Zen Kaku Gothic New", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 青海波 seigaiha — faint wave pattern for headers/empty states */
+.seigaiha {
+  background-image: radial-gradient(circle at 50% 100%, transparent 38%, var(--grid) 39%, var(--grid) 42%, transparent 43%,
+      transparent 52%, var(--grid) 53%, var(--grid) 56%, transparent 57%);
+  background-size: 40px 20px;
+}
+
+/* Hanko seal stamp-in */
+@keyframes stamp {
+  0% { transform: scale(2.2) rotate(-18deg); opacity: 0; }
+  60% { transform: scale(0.92) rotate(-8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 1; }
+}
+.animate-stamp { animation: stamp 420ms cubic-bezier(.2,.8,.3,1.2) both; }
+
+/* KanjiVG stroke-order animation */
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stamp { animation: none; transform: rotate(-8deg); }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
