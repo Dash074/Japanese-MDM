@@ -22,7 +22,8 @@ _Last updated: 2026-10-10_
 ## Key numbers
 - **Scope:** 103 N5 kanji (KANJIDIC2 old-JLPT level 4) + 26 non-N5 look-alike distractors
 - **Tests:** 173 unit/integration (Vitest) + 21 E2E (Playwright: journeys, screens, axe accessibility, study mode, offline) + 1 opt-in live two-device E2E (`LIVE=1`) + 9 live sync checks (`npm run test:sync`) + 13 live RLS checks (`supabase/tests/rls.sql`)
-- **Error detection (held-out synthetic, 7,680 attempts):** F1 order 0.99 · direction 0.99 · count 0.98 · proportion 0.98 · position 0.97 · look-alike 0.93 · 0% false positives on clean attempts
+- **Error detection (held-out synthetic, 7,680 attempts):** F1 order 0.996 · direction 0.998 · count 0.978 · proportion 0.980 · position 0.968 · look-alike 0.937 · 0% false positives on clean attempts
+- **Robustness:** macro F1 ≥ 0.968 with 0% false alarms up to 3× normal handwriting noise (±45% scale, ±15° tilt)
 - **Analysis speed:** p95 ≈ 4.6 ms per attempt
 - **Bundle:** ~82 KB gzipped JS
 
@@ -63,6 +64,7 @@ _Last updated: 2026-10-10_
 - ✅ Invariant tests (every kanji matches itself with 0 errors; deterministic)
 - ✅ Raw pen data saved per attempt (IndexedDB, compact encoding, newest 500) and included in JSON export + cloud sync (FR-14)
 - ✅ `scripts/import-fixtures.ts`: export → `tests/fixtures/<writer>/*.json`; `fixtures.test.ts` replays them (snapshot); `npm run evaluate` adds a real-handwriting section from human `label`s. Pipeline verified end-to-end with a browser export
+- ✅ Robustness sweep (`npm run robustness` → `docs/evaluation/robustness.md`): noise 0.5–4×. It found false alarms on tilted or shaky writing (15% at 3×); traced to missing rotation correction and jitter-inflated length; fixed with Procrustes alignment (±20° cap) and coarse-path length. Now 0% at 3×, 8.8% at 4× (was 39%)
 - ⚠️ Real pen attempts from the team (none yet)
 
 ## Sprint 4 — Practice MVP ✅
@@ -132,3 +134,4 @@ _Last updated: 2026-10-10_
 - **2026-10-10:** Ending-detection tests (8). Offline/installable PWA with E2E on the production build. Study report script verified against seeded data. 161 unit + 18 E2E passing.
 - **2026-10-10:** Sync bug hunt: fixed second-device progress rebuild and guide-level upload. Live two-device browser test added and passing; it uncovered and led to fixing the vanishing-result-on-promotion bug. Wrote the user manual and technical evaluation report. 164 unit + 19 E2E passing.
 - **2026-10-10:** First git history (13 commits, verified fresh-clone build, no secrets). Objective 7: confusion-aware quizzes on `feat/quiz`, merged into `develop`. 173 unit + 21 E2E passing.
+- **2026-10-10:** Robustness sweep; fixed false alarms on tilted/shaky writing (rotation-aware alignment, jitter-tolerant length). Main F1 up for 5 of 6 types, position −0.006.
