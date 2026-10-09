@@ -2,7 +2,7 @@
 
 A confusion-aware, pen-first kanji practice app for **JLPT N5**. Write a kanji with a graphics tablet, stylus, finger or mouse. Fude tells you *which* stroke went wrong and *why*: stroke order, direction, count, proportion, position, stroke ending, or writing a look-alike kanji.
 
-See [implementation.md](implementation.md) for the full SDLC plan, [progress.md](progress.md) for status, the [user guide](docs/user-manual.md), and the [technical evaluation](docs/evaluation/technical-report.md).
+See [implementation.md](implementation.md) for the full SDLC plan, [progress.md](progress.md) for status, the [user guide](docs/user-manual.md), the [technical evaluation](docs/evaluation/technical-report.md), and the [release checklist](docs/release-checklist.md) (deploy steps).
 
 ## Quick start
 
@@ -71,7 +71,7 @@ docs/            ADRs, evaluation results
 | 5 Backend (Supabase) | ✅ code: schema + RLS, magic link/Google auth, offline-first sync · ⚠️ needs a Supabase project to switch on |
 | 6 FSRS + recommendations + drills | ✅ auto-graded FSRS reviews, new-kanji intro, rule-based recommendations, confusion/order/proportion drills |
 | 7 Dashboard + polish | ✅ progress dashboard, settings, pen test, export, WCAG AA audit, confusion-aware quizzes · ⏳ LLM extras |
-| 8 Testing + release | 🔄 Playwright E2E (11 journeys) in CI · ⏳ device matrix, UAT, deploy |
+| 8 Testing + release | ✅ release candidate v1.0.0-rc.1: golden-path, CSP, offline, live-backend checks · ⏳ deploy, device matrix, UAT |
 
 ## Licences
 

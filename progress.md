@@ -17,11 +17,11 @@ _Last updated: 2026-10-10_
 | 5 | Backend: Supabase auth + sync | ✅ live: 6 migrations, RLS 13/13, sync smoke test 9/9 |
 | 6 | FSRS + recommendations + drills | ✅ |
 | 7 | Dashboard + polish + quizzes | ✅ WCAG 2.1 AA audit passing; confusion-aware quizzes (LLM extras ⏳) |
-| 8 | Testing, UAT, release | 🔄 E2E + a11y + study mode done; device matrix, UAT, deploy ⏳ |
+| 8 | Testing, UAT, release | ✅ release-ready (`release/v1.0`, tag `v1.0.0-rc.1`) · deploy, device matrix, UAT need accounts/devices ⚠️ |
 
 ## Key numbers
 - **Scope:** 103 N5 kanji (KANJIDIC2 old-JLPT level 4) + 26 non-N5 look-alike distractors
-- **Tests:** 173 unit/integration (Vitest) + 21 E2E (Playwright: journeys, screens, axe accessibility, study mode, offline) + 1 opt-in live two-device E2E (`LIVE=1`) + 9 live sync checks (`npm run test:sync`) + 13 live RLS checks (`supabase/tests/rls.sql`)
+- **Tests:** 176 unit/integration (Vitest) + 24 E2E (Playwright: journeys, screens, axe accessibility, study mode, offline) + 1 opt-in live two-device E2E (`LIVE=1`) + 9 live sync checks (`npm run test:sync`) + 13 live RLS checks (`supabase/tests/rls.sql`)
 - **Error detection (held-out synthetic, 7,680 attempts):** F1 order 0.996 · direction 0.998 · count 0.978 · proportion 0.980 · position 0.968 · look-alike 0.937 · 0% false positives on clean attempts
 - **Robustness:** macro F1 ≥ 0.968 with 0% false alarms up to 3× normal handwriting noise (±45% scale, ±15° tilt)
 - **Analysis speed:** p95 ≈ 4.6 ms per attempt
@@ -121,7 +121,13 @@ _Last updated: 2026-10-10_
 - ✅ Study mode for the learning study (§7.5): enrol by link `?study=control` / `?study=full` or in Settings. Control = correct/incorrect only (no explanations, highlights, live check, shape score, recommendations, error analytics) and self-graded reviews (auto-grade still logged). Group recorded on every attempt and synced. 3 E2E tests
 - ✅ `npm run study:report`: full vs control from the live DB (participants, clean rate, first- vs last-third improvement, review recall, auto-vs-final grade agreement, errors per attempt by type, per-participant table) → `docs/evaluation/study-report.md`. Verified with seeded data (all figures checked by hand), then cleaned up
 - ⏳ UAT with 5–10 classmates; run the learning study
-- ⏳ Production deploy, `v1.0.0`
+- ✅ **Release readiness pass** (`docs/release-checklist.md`):
+  - golden-path E2E on the production build: a new learner's whole first session (review, mix-up, drill, order error, quiz, dashboard, export with raw strokes, offline) with 0 page errors
+  - `vercel.json`: SPA deep-link rewrites, cache headers (service worker never cached, hashed assets immutable), strict CSP + security headers; E2E proves the CSP breaks nothing (fonts, Supabase, all screens)
+  - fixed: the Google button was shown while the provider is disabled (now behind `VITE_AUTH_GOOGLE`); auth errors translated (incl. the 2-emails/hour limit of Supabase's built-in mailer)
+  - live checks: sync 9/9, RLS 13/13, two-device E2E, schema matches migrations
+  - promotion E2E marked slow (passes 5/5 alone; timed out only under parallel load)
+- ⚠️ Production deploy: needs GitHub + Vercel; custom SMTP for study-scale sign-in (checklist §2)
 
 ---
 
@@ -135,3 +141,4 @@ _Last updated: 2026-10-10_
 - **2026-10-10:** Sync bug hunt: fixed second-device progress rebuild and guide-level upload. Live two-device browser test added and passing; it uncovered and led to fixing the vanishing-result-on-promotion bug. Wrote the user manual and technical evaluation report. 164 unit + 19 E2E passing.
 - **2026-10-10:** First git history (13 commits, verified fresh-clone build, no secrets). Objective 7: confusion-aware quizzes on `feat/quiz`, merged into `develop`. 173 unit + 21 E2E passing.
 - **2026-10-10:** Robustness sweep; fixed false alarms on tilted/shaky writing (rotation-aware alignment, jitter-tolerant length). Main F1 up for 5 of 6 types, position −0.006.
+- **2026-10-10:** Release readiness: golden-path E2E on the production build, vercel.json (rewrites, caching, CSP) with CSP verified, Google-button gating, friendly auth errors, all live checks green. Release candidate `v1.0.0-rc.1` merged to `main`.

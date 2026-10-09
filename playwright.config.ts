@@ -12,8 +12,8 @@ export default defineConfig({
     { command: "npx vite build && npx vite preview --port 4180 --strictPort", url: "http://localhost:4180", reuseExistingServer: !process.env.CI, timeout: 120_000 },
   ],
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"] }, testIgnore: /offline\.spec/ },
+    { name: "desktop", use: { ...devices["Desktop Chrome"] }, testIgnore: /(offline|csp|golden-path)\.spec/ },
     { name: "mobile", use: { ...devices["Pixel 7"] }, testMatch: /screens\.spec/ },
-    { name: "pwa", use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:4180" }, testMatch: /offline\.spec/ },
+    { name: "pwa", use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:4180" }, testMatch: /(offline|csp|golden-path)\.spec/ },
   ],
 });

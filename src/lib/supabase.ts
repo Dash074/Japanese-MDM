@@ -9,3 +9,6 @@ const key = import.meta.env?.VITE_SUPABASE_ANON_KEY as string | undefined;
  */
 export const supabase: SupabaseClient | null = url && key ? createClient(url, key) : null;
 export const backendEnabled = supabase !== null;
+
+/** Show "Continue with Google" only once the provider is enabled in Supabase (VITE_AUTH_GOOGLE=true). */
+export const googleEnabled = backendEnabled && import.meta.env?.VITE_AUTH_GOOGLE === "true";
