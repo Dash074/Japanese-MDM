@@ -41,7 +41,7 @@ function assign(user: Path[], ref: Path[]) {
   return mapping;
 }
 
-/** Least-squares uniform scale + translation mapping matched user points onto ref points. */
+/** Least-squares similarity (rotation + uniform scale + translation) mapping matched user points onto ref points. */
 function fitSimilarity(user: Path[], ref: Path[], mapping: number[]): (p: Vec) => Vec {
   const us: Vec[] = [], rs: Vec[] = [];
   // Robust fit: ignore outlier pairs (a misplaced stroke must not drag the whole alignment).
@@ -61,14 +61,25 @@ function fitSimilarity(user: Path[], ref: Path[], mapping: number[]): (p: Vec) =
   if (us.length < 2) return (p) => p;
   const mean = (a: Vec[]): Vec => [a.reduce((s, p) => s + p[0], 0) / a.length, a.reduce((s, p) => s + p[1], 0) / a.length];
   const mu = mean(us), mr = mean(rs);
-  let num = 0, den = 0;
+  // 2-D Procrustes: a = Σ u·r, b = Σ u×r give the best rotation θ = atan2(b, a) and scale.
+  let a = 0, b = 0, den = 0;
   for (let k = 0; k < us.length; k++) {
     const ux = us[k][0] - mu[0], uy = us[k][1] - mu[1];
-    num += ux * (rs[k][0] - mr[0]) + uy * (rs[k][1] - mr[1]);
+    const rx = rs[k][0] - mr[0], ry = rs[k][1] - mr[1];
+    a += ux * rx + uy * ry;
+    b += ux * ry - uy * rx;
     den += ux * ux + uy * uy;
   }
-  const s = den > 1e-9 ? Math.max(0.5, Math.min(2, num / den)) : 1;
-  return ([x, y]) => [s * (x - mu[0]) + mr[0], s * (y - mu[1]) + mr[1]];
+  if (den < 1e-9) return (p) => p;
+  // A tilted kanji is not a stroke error, so whole-kanji rotation is removed, capped so it
+  // can never "explain away" a genuinely misplaced stroke.
+  const th = Math.max(-CONFIG.maxRotation, Math.min(CONFIG.maxRotation, Math.atan2(b, a)));
+  const cos = Math.cos(th), sin = Math.sin(th);
+  const s = Math.max(0.5, Math.min(2, (a * cos + b * sin) / den));
+  return ([x, y]) => {
+    const dx = x - mu[0], dy = y - mu[1];
+    return [s * (dx * cos - dy * sin) + mr[0], s * (dx * sin + dy * cos) + mr[1]];
+  };
 }
 
 export function prepare(paths: Path[]): Path[] {

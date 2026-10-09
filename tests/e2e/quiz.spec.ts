@@ -27,7 +27,9 @@ test("quiz: choosing a wrong look-alike kanji is added to the confusion graph", 
     } else {
       // Kanji options: pick the first one that turns out wrong, i.e. not highlighted as the answer.
       await answers.nth(0).click();
-      if (await page.getByText("惜しい Not quite.").isVisible()) {
+      // Wait for the feedback to render before reading it (avoids a race).
+      const feedback = await page.getByRole("status").innerText();
+      if (feedback.includes("惜しい Not quite.")) {
         const picked = (await answers.nth(0).innerText()).split("\n").pop()!.trim();
         const confusions = await page.evaluate(() => JSON.parse(localStorage.getItem("fude-progress-v1")!).state.confusions);
         expect(Object.keys(confusions).some((key) => key.endsWith(`→${picked}`))).toBe(true);

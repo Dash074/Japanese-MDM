@@ -9,6 +9,8 @@ export const CONFIG = {
   minStrokeLength: 0.02,
   /** Weight of the direction (angle) term in the stroke cost. */
   angleWeight: 0.05,
+  /** Largest whole-kanji tilt (radians, ≈20°) the alignment will correct. */
+  maxRotation: (20 * Math.PI) / 180,
   /** Penalty for leaving a stroke unassigned in the Hungarian matrix. */
   unmatchedCost: 0.35,
 
