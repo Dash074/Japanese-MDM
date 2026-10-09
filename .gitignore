@@ -1,0 +1,11 @@
+node_modules
+dist
+data/raw
+.env
+.env.local
+*.log
+
+# Playwright
+test-results
+playwright-report
+screenshots
