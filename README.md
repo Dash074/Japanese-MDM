@@ -2,7 +2,7 @@
 
 A confusion-aware, pen-first kanji practice app for **JLPT N5**. Write a kanji with a graphics tablet, stylus, finger or mouse. Fude tells you *which* stroke went wrong and *why*: stroke order, direction, count, proportion, position, stroke ending, or writing a look-alike kanji.
 
-See [implementation.md](implementation.md) for the full SDLC plan, [progress.md](progress.md) for status, the [user guide](docs/user-manual.md), the [technical evaluation](docs/evaluation/technical-report.md), and the [release checklist](docs/release-checklist.md) (deploy steps).
+See [implementation.md](docs/implementation.md) for the full SDLC plan, [progress.md](docs/progress.md) for status, the [user guide](docs/user-manual.md), the [technical evaluation](docs/evaluation/technical-report.md), and the [release checklist](docs/release-checklist.md) (deploy steps).
 
 ## Quick start
 
